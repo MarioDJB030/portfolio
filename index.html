@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mario Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="home-page">
+
+
+
+    <div class="container" style="margin-top: 20px; min-height: 95vh; margin-bottom: 20px;">
+        <header>
+            <div class="logo" style="font-weight: 800; font-size: 1.5rem;">Mario</div>
+            <nav>
+                <a href="index.html">Inicio</a>
+                <a href="#projects">Proyectos</a>
+                <a href="documentation.html">Docs</a>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">🌙</button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="profile-container glass">
+                    <img src="profile.png" alt="Mario Profile" class="profile-photo">
+                </div>
+                <h1>Hola, soy Mario.</h1>
+                <p>Desarrollador Multiplataforma enfocado en construir herramientas digitales funcionales y modernas.
+                    Aquí
+                    encontrarás mis últimos proyectos y experimentos.</p>
+                <a href="#projects" class="btn">Ver Proyectos ↓</a>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="projects">
+                <h2 class="section-title">Mis Proyectos</h2>
+                <div class="project-grid">
+
+                    <!-- Project Card 1 -->
+                    <article class="project-card glass">
+                        <div class="project-image"
+                            style="background-image: url('https://via.placeholder.com/600x400?text=Project+1');"></div>
+                        <div class="project-content">
+                            <h3>Gestor de Tareas AI</h3>
+                            <p class="project-description">
+                                Una aplicación inteligente para gestionar tareas que utiliza IA para priorizar
+                                automáticamente tu día.
+                                Incluye funcionalidades de arrastrar y soltar, categorización automática y recordatorios
+                                inteligentes basados en tu ubicación.
+                                <br><br>
+                                La arquitectura se basa en microservicios para permitir una escalabilidad horizontal
+                                rápida. El frontend utiliza optimizaciones de rendimiento avanzadas.
+                            </p>
+                            <div class="tags">
+                                <span class="tag">JavaScript</span>
+                                <span class="tag">AI</span>
+                                <span class="tag">Node.js</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project Card 2 -->
+                    <article class="project-card glass">
+                        <div class="project-image"
+                            style="background-image: url('https://via.placeholder.com/600x400?text=Project+2');"></div>
+                        <div class="project-content">
+                            <h3>E-commerce Moderno</h3>
+                            <p class="project-description">
+                                Plataforma de comercio electrónico completa con carrito, pasarela de pagos integrada y
+                                panel de administración en tiempo real.
+                                Diseñada para ofrecer una experiencia de compra fluida y segura.
+                            </p>
+                            <div class="tags">
+                                <span class="tag">HTML/CSS</span>
+                                <span class="tag">Stripe</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project Card 3 -->
+                    <article class="project-card glass">
+                        <div class="project-image"
+                            style="background-image: url('https://via.placeholder.com/600x400?text=Project+3');"></div>
+                        <div class="project-content">
+                            <h3>Dashboard Financiero</h3>
+                            <p class="project-description">
+                                Visualización de datos financieros complejos mediante gráficos interactivos y reportes
+                                exportables.
+                                Ideal para seguimiento de inversiones y ahorros personales.
+                            </p>
+                            <div class="tags">
+                                <span class="tag">D3.js</span>
+                                <span class="tag">Analytics</span>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación - Mario's Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+
+
+    <div class="container" style="margin-top: 20px; min-height: 95vh; margin-bottom: 20px;">
+        <header class="glass">
+            <div class="logo" style="font-weight: 800; font-size: 1.5rem;">Mario.Dev <span
+                    style="font-weight:300; font-size: 1rem;">| Docs</span></div>
+            <nav>
+                <a href="index.html">Inicio</a>
+                <a href="index.html#projects">Proyectos</a>
+                <a href="documentation.html">Docs</a>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">🌙</button>
+            </nav>
+        </header>
+
+        <main style="max-width: 800px; margin: 40px auto;">
+            <h1 class="section-title">Artículos y Documentación</h1>
+
+            <a href="doc-benchmark.html" class="doc-item glass">
+                <div class="doc-date">06 Dic 2025</div>
+                <h2>Benchmark de Modelos IA en Mac Mini</h2>
+                <p>Comparativa de rendimiento y razonamiento local de SLMs (Gemma, Granite, Qwen) ejecutados en local.
+                </p>
+                <div class="tags" style="margin-top: 15px;">
+                    <span class="tag">AI</span>
+                    <span class="tag">Benchmark</span>
+                </div>
+            </a>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+
+    <style>
+        .doc-item {
+            display: block;
+            text-decoration: none;
+            color: var(--text-color);
+            padding: 30px;
+            margin-bottom: 20px;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .doc-item:hover {
+            transform: translateY(-5px);
+            background: var(--glass-bg);
+            /* slightly more opaque */
+        }
+
+        .doc-date {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            margin-bottom: 10px;
+        }
+
+        .doc-item h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .doc-item p {
+            opacity: 0.9;
+        }
+    </style>
+</body>
+
+</html>

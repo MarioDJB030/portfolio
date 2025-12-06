@@ -1,0 +1,335 @@
+:root {
+    /* Color Palette - Dark Mode (Default) */
+    --bg-color: #0a0a0a;
+    --text-color: #ffffff;
+    --accent-color: #70a1ff;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --card-bg: rgba(20, 20, 20, 0.6);
+    --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+    /* Animation config */
+    --transition-speed: 0.3s;
+}
+
+[data-theme="light"] {
+    /* Color Palette - Light Mode */
+    --bg-color: #f0f2f5;
+    --text-color: #1a1a1a;
+    --accent-color: #2e86de;
+    --glass-bg: rgba(255, 255, 255, 0.4);
+    --glass-border: rgba(0, 0, 0, 0.05);
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: color var(--transition-speed);
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Background Image Container - Only for Home Page */
+body.home-page::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('bg-main.jpg') no-repeat center center/cover;
+    z-index: -2;
+    transition: filter 0.5s ease;
+}
+
+/* Blur state class - applied via JS */
+body.home-page.blur-bg::before {
+    filter: blur(8px) brightness(0.6);
+}
+
+/* Overlay for readability */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    /* Dark overlay */
+    z-index: -1;
+    pointer-events: none;
+}
+
+[data-theme="light"] body::after {
+    background: rgba(255, 255, 255, 0.3);
+    /* Lighter overlay for light mode if needed, or keep dark for contrast with image */
+    /* Actually user wants this image. Key is text contrast. 
+       If light mode text is dark, we need light overlay. */
+    background: rgba(255, 255, 255, 0.45);
+}
+
+/* Simplify previous canvas container if present */
+#bg-canvas {
+    display: none;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow);
+    border-radius: 12px;
+}
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    z-index: 10;
+    position: relative;
+}
+
+.profile-container {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+    padding: 5px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+
+/* Header/Nav */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+    /* Add glass effect to header itself now */
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+}
+
+nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+nav a:hover {
+    opacity: 0.7;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-left: 20px;
+}
+
+/* Hero Section */
+.hero {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    background: linear-gradient(to right, var(--text-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.btn {
+    padding: 12px 30px;
+    background: var(--text-color);
+    color: var(--bg-color);
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: transform 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Projects Section */
+.projects {
+    padding: 80px 0;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.project-card {
+    position: relative;
+    padding: 20px;
+    transition: all 0.4s ease;
+    cursor: pointer;
+    overflow: hidden;
+    height: 350px;
+    /* Fixed initial height */
+    display: flex;
+    flex-direction: column;
+}
+
+.project-card.expanded {
+    grid-column: 1 / -1;
+    height: auto;
+    min-height: 500px;
+    cursor: default;
+}
+
+.project-image {
+    width: 100%;
+    height: 180px;
+    background-color: var(--glass-border);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background-position: center;
+    background-size: cover;
+}
+
+.project-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.project-description {
+    line-height: 1.5;
+    margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.project-card.expanded .project-description {
+    -webkit-line-clamp: unset;
+}
+
+.tags {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tag {
+    padding: 5px 12px;
+    background: var(--glass-border);
+    border-radius: 15px;
+    font-size: 0.85rem;
+}
+
+/* Documentation Page */
+.docs-layout {
+    display: flex;
+    gap: 40px;
+    padding-top: 40px;
+    height: calc(100vh - 80px);
+    /* Adjust for header */
+}
+
+.docs-sidebar {
+    width: 250px;
+    flex-shrink: 0;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.doc-link {
+    display: block;
+    padding: 10px;
+    margin-bottom: 5px;
+    text-decoration: none;
+    color: var(--text-color);
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.doc-link:hover,
+.doc-link.active {
+    background: var(--glass-border);
+}
+
+.docs-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-bottom: 40px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 3rem;
+    }
+
+    .project-card.expanded {
+        grid-column: auto;
+    }
+
+    .docs-layout {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .docs-sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 200px;
+    }
+}
