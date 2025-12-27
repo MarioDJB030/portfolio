@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentación de Prompts - El Asedio de Bastión Gris</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    /* Custom overrides for this page specific elements */
+    .prompt-card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(5px);
+    }
+
+    .prompt-title {
+      font-weight: 800;
+      color: #ffffff;
+      /* text-white */
+      margin-bottom: 15px;
+      display: block;
+      font-size: 1.5rem;
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 10px;
+    }
+
+    .prompt-content {
+      white-space: pre-wrap;
+      color: #9ca3af;
+      /* text-gray-400 */
+      line-height: 1.7;
+    }
+
+    .prompt-image {
+      max-width: 100%;
+      height: auto;
+      margin-top: 20px;
+      border-radius: 8px;
+      border: 1px solid var(--glass-border);
+      display: block;
+      box-shadow: var(--shadow);
+    }
+
+    code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      background-color: #374151;
+      /* gray-700 */
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #fbbf24;
+      /* yellow-400 */
+    }
+
+    details {
+      margin-top: 20px;
+      background-color: #1f2937;
+      /* bg-gray-800 */
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    summary {
+      cursor: pointer;
+      padding: 15px;
+      background-color: #374151;
+      /* gray-700 */
+      color: #ffffff;
+      font-weight: 600;
+      outline: none;
+      user-select: none;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.2s;
+    }
+
+    summary:hover {
+      background-color: #4b5563;
+      /* gray-600 */
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: '+';
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    details[open] summary::after {
+      content: '-';
+    }
+
+    pre {
+      background-color: #111827;
+      /* gray-900 */
+      padding: 20px;
+      margin: 0;
+      border-top: 1px solid var(--glass-border);
+      overflow-x: auto;
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      color: #a5d6ff;
+    }
+
+    ul {
+      list-style-type: disc;
+      padding-left: 20px;
+      margin-top: 10px;
+      color: #d1d5db;
+      /* text-gray-300 */
+    }
+
+    .tag {
+      display: inline-block;
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8em;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    h4 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    blockquote {
+      border-left: 3px solid var(--accent-color);
+      padding-left: 15px;
+      margin: 15px 0;
+      color: #d1d5db;
+      /* text-gray-300 */
+      font-style: italic;
+      background: #1f2937;
+      /* bg-gray-800 */
+      padding: 10px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    strong {
+      color: #e5e7eb;
+      /* gray-200 */
+    }
+
+    /* Light mode overrides */
+    [data-theme="light"] .prompt-title,
+    [data-theme="light"] h4,
+    [data-theme="light"] summary {
+      color: #111827;
+    }
+
+    [data-theme="light"] .prompt-content {
+      color: #4b5563;
+    }
+
+    [data-theme="light"] details,
+    [data-theme="light"] blockquote {
+      background-color: #f3f4f6;
+    }
+
+    [data-theme="light"] summary {
+      background-color: #e5e7eb;
+    }
+
+    [data-theme="light"] pre {
+      background-color: #f9fafb;
+    }
+
+    [data-theme="light"] pre code {
+      color: #1f2937;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container" style="margin-top: 20px; min-height: 95vh; margin-bottom: 20px;">
+    <!-- Standard Header -->
+    <header class="glass" style="margin-bottom: 40px;">
+      <div class="logo" style="font-weight: 800; font-size: 1.5rem;">Mario <span
+          style="font-weight:300; font-size: 1rem;">| Docs</span></div>
+      <nav>
+        <a href="../documentation.html">&larr; Volver</a>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">🌙</button>
+      </nav>
+    </header>
+
+    <main style="max-width: 900px; margin: 0 auto;">
+
+      <div style="text-align: center; margin-bottom: 50px;">
+        <h1
+          style="font-size: 3rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, var(--text-color), var(--accent-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          Documentación del Proyecto
+        </h1>
+        <p style="font-size: 1.2rem; opacity: 0.8;">Historial de Prompts y Requerimientos - El Asedio de Bastión Gris
+        </p>
+      </div>
+
+      <section class="prompt-card">
+        <span class="tag">Inicio</span>
+        <span class="prompt-title">Prompt 1: Creación del Proyecto y Datos</span>
+        <div class="prompt-content">
+          Actúa como un Desarrollador Web Senior (Full Stack) y Escritor Creativo. Tu tarea es crear una Novela
+          Visual Web completa en un solo archivo index.html (que incluya CSS y JS). [Detalles del concepto,
+          mecánicas, estructura de datos stories, y requerimientos técnicos]
+
+          <h3>1. Concepto y Mecánicas</h3>
+          <ul>
+            <li><strong>Tema:</strong> "El Asedio de Bastión Gris". Una batalla contada desde 4 perspectivas
+              simultáneas.</li>
+            <li><strong>Selección:</strong> Al inicio, el usuario elige **Género** (Hombre/Mujer) y **Clase** (Guerrero,
+              Asesino, Mago, Santo).</li>
+            <li>Al pasar el mouse por la clase, se muestra un video de fondo en bucle (ej: `guerrero.mp4` o
+              `guerrera.mp4` según el género).</li>
+            <li><strong>Flujo de Juego:</strong>
+              <ul>
+                <li>Hay 4 historias lineales (una por clase).</li>
+                <li>Cada historia tiene **5 Escenas**.</li>
+              </ul>
+            </li>
+            <li><strong>Interacción:</strong> En cada escena, se muestra una imagen, un texto narrativo y 2 o 3
+              opciones.</li>
+            <li><strong>Lógica de Elección:</strong> Al hacer clic en una opción, el texto narrativo se actualiza
+              inmediatamente mostrando la **consecuencia** de esa acción (feedback). Debajo aparece un botón "Continuar"
+              que lleva a la siguiente escena.</li>
+            <li><strong>Sincronización:</strong> Las historias ocurren a la vez. La Escena 3 es el punto de cruce: El
+              Mago causa una explosión que los otros tres perciben desde su posición.</li>
+          </ul>
+
+          <h3>2. Estructura de Datos (Narrativa)</h3>
+          Debes implementar esta constante `stories` en el Javascript EXACTAMENTE como está escrita aquí para
+          asegurar la coherencia de la trama:
+        </div>
+
+        <details>
+          <summary>Ver Estructura JSON (stories)</summary>
+          <pre><code>const stories = {
+  warrior: [
+    {
+      img: "guerrero_1_puerta.png",
+      text: "La puerta de Bastión Gris se alza ante ti. El ariete golpea la madera. ¡BUM! Las flechas llueven.",
+      choices: [
+        { label: "Cubrirse con el escudo y empujar", outcome: "Tu escudo vibra con los impactos, pero proteges a tus hombres mientras avanzan." },
+        { label: "Gritar para inspirar a las tropas", outcome: "Tu rugido supera el estruendo de la batalla. Los soldados cargan con furia renovada." }
+      ]
+    },
+    {
+      img: "guerrero_2_patio.png",
+      text: "¡La puerta cede! Entras al patio interior. Un capitán enemigo te corta el paso.",
+      character: "npc_capitan.png",
+      choices: [
+        { label: "Golpe de escudo a la cara", outcome: "El capitán cae aturdido. Lo rematas sin piedad." },
+        { label: "Duelo de espadas honorable", outcome: "Chocan aceros. Eres más fuerte y rompes su guardia de un tajo." }
+      ]
+    },
+    {
+      img: "guerrero_3_muralla.png",
+      text: "Luchas en las murallas. De repente, una luz azul cegadora estalla en la colina lejana (el Mago). La torre de vigilancia explota.",
+      choices: [
+        { label: "Aprovechar la confusión", outcome: "Mientras miran la explosión, atraviesas sus defensas distraídas." },
+        { label: "Protegerse de los escombros", outcome: "Te cubres justo a tiempo mientras llueven piedras de la torre destruida." }
+      ]
+    },
+    {
+      img: "guerrero_4_torre.png",
+      text: "Subes hacia la sala del trono. La guardia real bloquea la escalera de caracol.",
+      choices: [
+        { label: "Usar tu fuerza bruta", outcome: "Los empujas escalera abajo como si fueran muñecos." },
+        { label: "Intimidarlos", outcome: "Ven la sangre en tu armadura y se apartan temblando." }
+      ]
+    },
+    {
+      img: "guerrero_5_trono.png",
+      text: "El Rey está acorralado. La batalla ha terminado. Eres el primero en llegar.",
+      character: "npc_rey.png",
+      choices: [
+        { label: "Exigir su rendición", outcome: "El Rey suelta su espada. La victoria es nuestra." },
+        { label: "Acabar con él", outcome: "La guerra termina con su vida. Tu nombre será leyenda." }
+      ]
+    }
+  ],
+  assassin: [
+    {
+      img: "asesino_1_alcantarilla.png",
+      text: "Mientras el ejército ataca la puerta, tú te deslizas por las alcantarillas. El olor es insoportable.",
+      choices: [
+        { label: "Avanzar rápido ignorando el ruido", outcome: "Haces ruido al pisar agua, pero eres rápido. Nadie te ve." },
+        { label: "Moverse lento y silencioso", outcome: "Tardas más, pero te deslizas como una sombra líquida." }
+      ]
+    },
+    {
+      img: "asesino_2_sombras.png",
+      text: "Emerges en los pasillos del castillo. Dos guardias patrullan hablando de la batalla exterior.",
+      choices: [
+        { label: "Lanzar una moneda para distraer", outcome: "Se giran hacia el sonido. Pasas por detrás sin ser visto." },
+        { label: "Eliminarlos silenciosamente", outcome: "Dos cortes rápidos. Caen antes de tocar el suelo." }
+      ]
+    },
+    {
+      img: "asesino_3_tejados.png",
+      text: "Estás en los tejados. ¡BOOM! Una explosión mágica azul ilumina el cielo. Todos los guardias miran hacia afuera.",
+      choices: [
+        { label: "Es mi oportunidad, ¡correr!", outcome: "Corres por las tejas mientras ellos miran la luz del Mago." },
+        { label: "Observar un segundo", outcome: "Esa magia... debe ser nuestro hechicero. El caos es tu aliado." }
+      ]
+    },
+    {
+      img: "asesino_4_ventana.png",
+      text: "Llegas a la ventana de los aposentos reales. Está cerrada.",
+      choices: [
+        { label: "Forzar la cerradura", outcome: "Click. Se abre suavemente." },
+        { label: "Romper el cristal con tela", outcome: "Amortiguas el sonido. Entras rodando." }
+      ]
+    },
+    {
+      img: "asesino_5_recamara.png",
+      text: "El Rey está solo, mirando un mapa, ajeno a tu presencia.",
+      character: "npc_rey.png",
+      choices: [
+        { label: "Susurrar antes de atacar", outcome: "Se gira aterrorizado justo cuando tu hoja encuentra su cuello." },
+        { label: "Veneno en su copa", outcome: "Lo viertes en su vino. Cae asfixiado segundos después." }
+      ]
+    }
+  ],
+  mage: [
+    {
+      img: "mago_1_colina.png",
+      text: "Estás en la colina frente al castillo. El viento aúlla. Debes preparar el hechizo de asedio.",
+      choices: [
+        { label: "Comenzar el cántico lentamente", outcome: "Las palabras fluyen, la energía se acumula estable." },
+        { label: "Forzar la energía del ambiente", outcome: "Es arriesgado, pero el maná se arremolina violentamente a tu alrededor." }
+      ]
+    },
+    {
+      img: "mago_2_conjuro.png",
+      text: "Las runas brillan en el suelo. Un arquero enemigo te apunta desde la muralla.",
+      choices: [
+        { label: "Crear barrera de viento", outcome: "La flecha se desvía inofensivamente." },
+        { label: "Disparar un rayo rápido", outcome: "Fulminas al arquero antes de que dispare. Vuelves al ritual." }
+      ]
+    },
+    {
+      img: "mago_3_explosion.png",
+      text: "¡El hechizo está listo! Sientes el poder arcano quemándote las manos. ¡AHORA!",
+      choices: [
+        { label: "¡Liberar la Nova Azul!", outcome: "Un haz de luz pura impacta la torre. La explosión sacude la tierra." },
+        { label: "Dirigir el impacto a la puerta", outcome: "La puerta se vaporiza. Tus aliados (el Guerrero) vitorean." }
+      ]
+    },
+    {
+      img: "mago_4_caos.png",
+      text: "El esfuerzo te ha dejado agotado. Soldados enemigos salen de las ruinas hacia ti.",
+      character: "npc_enemigo.png",
+      choices: [
+        { label: "Usar el último aliento para quemarlos", outcome: "Una llamarada final los consume." },
+        { label: "Teletransportarse a corta distancia", outcome: "Apareces detrás de una roca, a salvo." }
+      ]
+    },
+    {
+      img: "mago_5_vacio.png",
+      text: "La batalla termina. Desde la colina ves el humo y la victoria. Tu trabajo está hecho.",
+      choices: [
+        { label: "Meditar para recuperar fuerzas", outcome: "La magia vuelve a fluir lentamente." },
+        { label: "Observar el castillo conquistado", outcome: "Sonríes. Sin ti, no lo habrían logrado." }
+      ]
+    }
+  ],
+  saint: [
+    {
+      img: "santo_1_hospital.png",
+      text: "La tienda médica es un caos. Los heridos del frente (donde está el Guerrero) no paran de llegar.",
+      choices: [
+        { label: "Organizar a las enfermeras", outcome: "El orden salva vidas. La eficiencia mejora." },
+        { label: "Atender al más grave tú mismo", outcome: "Tus manos detienen la hemorragia. Salvado." }
+      ]
+    },
+    {
+      img: "santo_2_heridos.png",
+      text: "Un soldado joven te agarra el brazo. 'No siento las piernas', grita.",
+      choices: [
+        { label: "Rezar una plegaria de calma", outcome: "Una luz dorada lo envuelve. El dolor cesa." },
+        { label: "Aplicar vendajes y hierbas", outcome: "Método tradicional pero efectivo. Se estabiliza." }
+      ]
+    },
+    {
+      img: "santo_3_rezo.png",
+      text: "La tierra tiembla violentamente por una explosión mágica cercana (obra del Mago). El techo de la tienda cede.",
+      choices: [
+        { label: "Sostener el pilar central", outcome: "Usas tu fuerza para evitar que la tienda colapse sobre los heridos." },
+        { label: "Proteger a los pacientes con tu cuerpo", outcome: "Te caen escombros, pero ellos están a salvo." }
+      ]
+    },
+    {
+      img: "santo_4_milagro.png",
+      text: "La moral está baja. Creen que vamos a perder. Necesitan un milagro.",
+      choices: [
+        { label: "Invocar la Luz Sagrada", outcome: "Un pilar de luz sale de la tienda. Todos lo ven y recuperan la esperanza." },
+        { label: "Dar un discurso de fe", outcome: "Tus palabras calan hondo. Los que pueden caminar, vuelven a luchar." }
+      ]
+    },
+    {
+      img: "santo_5_paz.png",
+      text: "El silencio cae. La batalla ha terminado. Sales de la tienda al amanecer.",
+      choices: [
+        { label: "Llorar por los caídos", outcome: "Tus lágrimas santifican el suelo." },
+        { label: "Bendecir a los supervivientes", outcome: "Les das la paz que necesitan tras el horror." }
+      ]
+    }
+  ]
+};</code></pre>
+        </details>
+        <img src="Imagenes/1.png" alt="Prompt 1 Resultado" class="prompt-image">
+      </section>
+
+      <section class="prompt-card">
+        <span class="tag">Refinamiento</span>
+        <span class="prompt-title">Prompt 2: Refinamiento Narrativo</span>
+        <div class="prompt-content">
+          En algunos momentos, cuando se hace referencia a otra historia, se indica que es una referencia a otra
+          historia ej:De repente, una luz azul cegadora estalla en la colina lejana (el Mago). quita el "(el
+          mago)" , no quiero que salga eso especificado en ninguna de las historias
+        </div>
+      </section>
+
+      <section class="prompt-card">
+        <span class="tag">Assets</span>
+        <span class="prompt-title">Prompt 3: Ubicación de Assets</span>
+        <div class="prompt-content">
+          Ten en cuenta que las imágenes de las historias, están en la carpeta imágenes (los videos no)
+        </div>
+        <img src="Imagenes/3.png" alt="Prompt 3 Resultado" class="prompt-image">
+      </section>
+
+      <section class="prompt-card">
+        <span class="tag">Video</span>
+        <span class="prompt-title">Prompt 4: Ajuste de Video en Juego</span>
+        <div class="prompt-content">
+          Cuando empiece las historias quita el video del selector de personajes (Se quedaba de fondo por encima del
+          contenido)
+        </div>
+      </section>
+
+      <section class="prompt-card">
+        <span class="tag">Estilo</span>
+        <span class="prompt-title">Prompt 5: Ajuste de Capas (Z-Index)</span>
+        <div class="prompt-content">
+          Las imágenes de los NPCs se ven debajo de los menús de texto y elecciones, haz que se vea justo por
+          encima
+        </div>
+        <img src="Imagenes/5.png" alt="Prompt 5 Resultado" class="prompt-image">
+      </section>
+
+      <section class="prompt-card">
+        <span class="tag">Lógica</span>
+        <span class="prompt-title">Prompt 6: Lógica de Género en Archivos</span>
+        <div class="prompt-content">
+          Ten en cuenta que cuando selecciona el género de mujer las imágenes para la historia, el nombre de la
+          imagen pasa a femenino, por ejemplo: santo_1_hospital.png pasa a: santa_1_hospital.png Así con todas, el
+          masculino sigue igual claro.
+        </div>
+        <img src="Imagenes/6.png" alt="Prompt 6 Resultado" class="prompt-image">
+      </section>
+
+      <section class="prompt-card">
+        <span class="tag">Corrección</span>
+        <span class="prompt-title">Prompt 7: Reporte de Error (Imágenes)</span>
+        <div class="prompt-content">
+          Ahora ya no sale ninguna imagen, revisa que las hayas puesto correctamente.
+          - Se equivocó al hacer el cambio en los nombres
+        </div>
+      </section>
+
+      <section class="prompt-card">
+        <span class="tag">Diseño</span>
+        <span class="prompt-title">Prompt 8: Cambio de Diseño (Layout y UI)</span>
+        <div class="prompt-content">
+          Ahora si. Vamos a otro tema, quiero cambiar la estructura de la página de la historia, quiero que las
+          posibles acciones las pongas en la misma línea, una opción izquierda, otra derecha, y además vas a
+          añadir botón para ocultar el menú del texto y poder ver la imagen de fondo
+        </div>
+        <img src="Imagenes/9.png" alt="Prompt 9 Resultado" class="prompt-image">
+      </section>
+
+      <section class="prompt-card">
+        <span class="tag">Estilo</span>
+        <span class="prompt-title">Prompt 9: Posición de NPCs</span>
+        <div class="prompt-content">
+          Haz que las imágenes de los NPCs salgan fuera del cuadro de texto, ponlo justo encima. Mueve el botón para
+          quitar el menú de texto a la izquierda.
+
+          -Ajustes finales.
+        </div>
+
+      </section>
+
+      <!-- New Extra Section -->
+      <section class="prompt-card">
+        <span class="tag" style="background-color: #8a385d;">Extra</span>
+        <span class="prompt-title">Prompts de Generación de Imágenes (IA)</span>
+        <div class="prompt-content">
+          <p>Para generar las imágenes y videos de la web he usado estos prompt generados por Gemini con
+            anterioridad en conjunto con el Prompt 1. Aquí tienes el texto que me dio Gemini:</p>
+
+          <p><em>Para que las historias tengan sentido visual, genera las imágenes usando estos prompts. (Te
+              recomiendo usar Midjourney o DALL-E 3).</em></p>
+
+          <p><strong>Estilo General (Añadir al final de cada prompt):</strong></p>
+          <blockquote
+            style="border-left: 3px solid var(--accent-color); padding-left: 10px; color: #d1d5db; font-style: italic;">
+            "Dark fantasy RPG video game art style, semi-realistic, cinematic lighting, highly detailed, 16:9
+            aspect ratio"
+          </blockquote>
+
+          <h4>1. Videos de Selección (Personajes)</h4>
+          <p><em>Genera la imagen y luego anímala con una IA de video si puedes, o úsala estática.</em></p>
+          <ul>
+            <li><strong>Guerrero/a:</strong> "A tough knight in heavy plate armor, resting a giant sword on the
+              ground, battlefield background."</li>
+            <li><strong>Asesino/a:</strong> "A hooded rogue with dual daggers, face hidden in shadow, purple
+              magical smoke aura."</li>
+            <li><strong>Mago/a:</strong> "A powerful sorcerer holding a staff with a glowing blue crystal,
+              floating rocks around."</li>
+            <li><strong>Santo/a:</strong> "A benevolent cleric in white and gold robes, holding a glowing book,
+              soft divine light."</li>
+          </ul>
+
+          <h4>2. Escenarios (Storyline: Guerrero)</h4>
+          <ul>
+            <li><code>guerrero_1_puerta.png</code>: "Huge wooden castle gate being smashed by a battering ram,
+              arrows flying, first person view from the attackers side."</li>
+            <li><code>guerrero_2_patio.png</code>: "Inside a castle courtyard during battle, stone floor,
+              debris, smoke."</li>
+            <li><code>guerrero_3_muralla.png</code>: "Castle ramparts view, a massive blue magical explosion in
+              the distance destroying a tower."</li>
+            <li><code>guerrero_4_torre.png</code>: "A narrow stone spiral staircase inside a tower, torchlight
+              on walls."</li>
+            <li><code>guerrero_5_trono.png</code>: "Medieval throne room, high ceilings, red carpet, victory
+              atmosphere."</li>
+          </ul>
+
+          <h4>3. Escenarios (Storyline: Asesino)</h4>
+          <ul>
+            <li><code>asesino_1_alcantarilla.png</code>: "Dark sewer tunnel, stone archway, green water, rats,
+              dim light from a grate above."</li>
+            <li><code>asesino_2_sombras.png</code>: "Dark stone castle hallway at night, shadows, torches on
+              walls."</li>
+            <li><code>asesino_3_tejados.png</code>: "Rooftops of a medieval castle at night, looking at a
+              distant blue magical explosion in the sky."</li>
+            <li><code>asesino_4_ventana.png</code>: "Close up of a gothic window from the outside, climbing the
+              wall."</li>
+            <li><code>asesino_5_recamara.png</code>: "Royal bedroom, luxurious bed, fireplace, shadows."</li>
+          </ul>
+
+          <h4>4. Escenarios (Storyline: Mago)</h4>
+          <ul>
+            <li><code>mago_1_colina.png</code>: "A rocky hill overlooking a castle siege from a distance, stormy
+              sky."</li>
+            <li><code>mago_2_conjuro.png</code>: "Magic circle glowing blue on the ground, magical runes
+              floating in air."</li>
+            <li><code>mago_3_explosion.png</code>: "First person view of shooting a massive blue laser beam
+              towards a castle."</li>
+            <li><code>mago_4_caos.png</code>: "Battlefield covered in magical blue smoke and fire."</li>
+            <li><code>mago_5_vacio.png</code>: "The same rocky hill but calm now, smoke rising from the castle
+              in the distance."</li>
+          </ul>
+
+          <h4>5. Escenarios (Storyline: Santo)</h4>
+          <ul>
+            <li><code>santo_1_hospital.png</code>: "Interior of a medieval medical tent, cots with wounded
+              soldiers, candlelight."</li>
+            <li><code>santo_2_heridos.png</code>: "Close up of hands glowing with golden light healing a wound."
+            </li>
+            <li><code>santo_3_rezo.png</code>: "Interior of the tent shaking, dust falling from ceiling, chaotic
+              angle."</li>
+            <li><code>santo_4_milagro.png</code>: "Bright blinding golden light filling the tent, divine
+              atmosphere."</li>
+            <li><code>santo_5_paz.png</code>: "Outside the medical tent at sunrise, peaceful morning."</li>
+          </ul>
+
+          <h4>6. NPCs (Personajes superpuestos)</h4>
+          <p><em>Asegúrate de recortar el fondo de estos o pedir "white background" para quitarlo fácil.</em></p>
+          <ul>
+            <li><code>npc_capitan.png</code>: "Portrait of an angry enemy captain shouting, helmet on."</li>
+            <li><code>npc_rey.png</code>: "Portrait of a defeated king, looking tired and afraid, crown
+              crooked."</li>
+            <li><code>npc_enemigo.png</code>: "Portrait of a scary soldier with a dark helmet."</li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../script.js"></script>
+</body>
+
+</html>
