@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación Técnica - PanelDI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Styles based on prompts.html for consistency */
+        .doc-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(5px);
+        }
+
+        .doc-title {
+            font-weight: 800;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            display: block;
+            font-size: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
+        }
+
+        .doc-content {
+            white-space: pre-wrap;
+            color: var(--text-color);
+            /* Adjusted to use var for theme consistency */
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        .doc-image {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            display: block;
+            box-shadow: var(--shadow);
+        }
+
+        /* Specific code styling */
+        pre {
+            background-color: #1e1e1e;
+            /* Dark editor theme */
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 1px solid #333;
+            overflow-x: auto;
+            color: #d4d4d4;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        /* Syntax highlighting simulation */
+        .kd {
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        /* keyword */
+        .s {
+            color: #ce9178;
+        }
+
+        /* string */
+        .c {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        /* comment */
+        .f {
+            color: #dcdcaa;
+        }
+
+        /* function */
+        .v {
+            color: #9cdcfe;
+        }
+
+        /* variable/property */
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--text-color), var(--accent-color));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        h2,
+        h3,
+        h4 {
+            color: var(--text-color);
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin-bottom: 1em;
+        }
+
+        strong {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" style="margin-top: 20px; min-height: 95vh; margin-bottom: 20px;">
+        <!-- Header -->
+        <header class="glass" style="margin-bottom: 40px;">
+            <div class="logo" style="font-weight: 800; font-size: 1.5rem;">Mario <span
+                    style="font-weight:300; font-size: 1rem;">| Docs</span></div>
+            <nav>
+                <a href="documentation.html">&larr; Volver</a>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">🌙</button>
+            </nav>
+        </header>
+
+        <main style="max-width: 900px; margin: 0 auto;">
+
+            <div style="text-align: center; margin-bottom: 50px;">
+                <h1>Panel de Administración de Servidores</h1>
+                <p style="font-size: 1.2rem; opacity: 0.8;">Documentación Técnica y Detalles de Implementación</p>
+            </div>
+
+            <!-- Introduction -->
+            <section class="doc-card">
+                <span class="doc-title">1. Introducción y Propósito</span>
+                <div class="doc-content">
+                    <p><strong>PanelDI</strong> es una solución integral para la administración remota de
+                        infraestructuras IT. Su objetivo es centralizar la gestión de servidores Linux y Windows en una
+                        única interfaz web intuitiva, eliminando la necesidad de recordar comandos complejos de
+                        terminal.</p>
+                    <p>La aplicación sigue una arquitectura moderna <strong>Cliente-Servidor</strong>:</p>
+                    <ol>
+                        <li><strong>Frontend (React):</strong> Lo que ve el usuario. Se encarga de mostrar los datos
+                            gráficamente.</li>
+                        <li><strong>Backend (Node.js):</strong> El motor que realiza el trabajo sucio. Recibe órdenes
+                            del frontend y se conecta a los servidores remotos vía <strong>SSH</strong> (Secure Shell)
+                            para ejecutarlas.</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="doc-card">
+                <span class="doc-title">2. Detalle de Funcionalidades e Implementación</span>
+                <div class="doc-content">
+                    <p>A continuación, explicamos cada funcionalidad paso a paso, acompañándola del código real que la
+                        hace posible.</p>
+
+                    <!-- A. SSH Connection -->
+                    <h3>A. Conexión SSH y Comprobación de Estado</h3>
+                    <p><strong>¿En qué consiste?</strong><br>
+                        Antes de mostrar cualquier dato, el panel debe asegurarse de que el servidor es accesible. Para
+                        ello, intenta abrir una sesión SSH con las credenciales proporcionadas. Si la conexión
+                        (Handshake) es exitosa, consideramos que el servidor está "Online". Además, aprovechamos esta
+                        conexión inicial para verificar si los servicios configurados (como Apache o MySQL) están
+                        instalados o ejecutándose.</p>
+
+                    <p><strong>Código de Implementación (server/index.js):</strong><br>
+                        Se utiliza la librería <code>ssh2</code>. El objeto <code>conn</code> representa nuestra
+                        conexión. El método <code>.connect()</code> inicia el proceso y, si todo va bien, se dispara el
+                        evento <code>ready</code>.</p>
+
+                    <pre><code><span class="c">// Iniciamos la conexión con los parámetros (IP, usuario, contraseña)</span>
+<span class="v">conn</span>.<span class="f">connect</span>({
+    <span class="v">host</span>: <span class="v">ip</span>,
+    <span class="v">port</span>: <span class="v">sshPort</span>,
+    <span class="v">username</span>: <span class="v">user</span>,
+    <span class="v">password</span>: <span class="v">password</span>,
+    <span class="v">readyTimeout</span>: <span class="s">10000</span>, <span class="c">// Esperamos máximo 10s</span>
+    <span class="v">algorithms</span>: {
+        <span class="v">serverHostKey</span>: [<span class="s">'ssh-rsa'</span>, <span class="s">'ssh-dss'</span>, <span class="s">'ecdsa-sha2-nistp256'</span>, <span class="s">'ssh-ed25519'</span>]
+    }
+});
+
+<span class="c">// Este bloque se ejecuta SOLAMENTE si la conexión (login) fue correcta</span>
+<span class="v">conn</span>.<span class="f">on</span>(<span class="s">'ready'</span>, () => {
+    <span class="v">results</span>.<span class="v">ssh</span> = <span class="kd">true</span>; <span class="c">// El servidor está online</span>
+    
+    <span class="c">// Aquí dentro procederíamos a chequear los servicios individuales</span>
+    <span class="c">// ...</span>
+});</code></pre>
+                    <img src="img/panel-1.png" alt="Diagrama de Conexión SSH" class="doc-image">
+                </div>
+            </section>
+
+            <section class="doc-card">
+                <span class="doc-title">B. Reiniciar o Apagar el Servidor (Power Actions)</span>
+                <div class="doc-content">
+                    <p><strong>¿En qué consiste?</strong><br>
+                        Esta funcionalidad permite enviar comandos críticos al sistema operativo para detener
+                        (<code>shutdown</code>) o reiniciar (<code>reboot</code>) la máquina. Es vital diferenciar entre
+                        Windows y Linux, ya que sus comandos son totalmente distintos.</p>
+
+                    <p><strong>Código de Implementación (server/index.js):</strong><br>
+                        El backend recibe la <code>action</code> ('shutdown' o 'restart') y el tipo de SO
+                        (<code>isWindows</code>).</p>
+
+                    <pre><code><span class="c">// Si la acción es APAGAR</span>
+<span class="kd">if</span> (<span class="v">action</span> === <span class="s">'shutdown'</span>) {
+    <span class="kd">if</span> (<span class="v">isWindows</span>) {
+        <span class="c">// Comando PowerShell para Windows</span>
+        <span class="v">cmd</span> = <span class="s">'powershell Stop-Computer -Force'</span>;
+    } <span class="kd">else</span> {
+        <span class="c">// Comando Linux. Nota el uso de 'sudo -S' y 'echo' para</span>
+        <span class="c">// pasar la contraseña automáticamente sin que la pida el terminal interactivo.</span>
+        <span class="v">cmd</span> = <span class="s">`echo '</span>${<span class="v">password</span>}<span class="s">' | sudo -S -p '' /usr/sbin/shutdown -h now`</span>;
+    }
+
+<span class="c">// Si la acción es REINICIAR</span>
+} <span class="kd">else if</span> (<span class="v">action</span> === <span class="s">'restart'</span>) {
+    <span class="kd">if</span> (<span class="v">isWindows</span>) {
+        <span class="v">cmd</span> = <span class="s">'powershell Restart-Computer -Force'</span>;
+    } <span class="kd">else</span> {
+        <span class="v">cmd</span> = <span class="s">`echo '</span>${<span class="v">password</span>}<span class="s">' | sudo -S -p '' /usr/sbin/reboot`</span>;
+    }
+}</code></pre>
+
+                    <img src="img/panel-2.png" alt="Botones de Apagar/Reiniciar" class="doc-image">
+                </div>
+            </section>
+
+            <section class="doc-card">
+                <span class="doc-title">C. Obtención de Métricas en Tiempo Real</span>
+                <div class="doc-content">
+                    <p><strong>¿En qué consiste?</strong><br>
+                        Para saber la salud del servidor, consultamos tres indicadores clave: CPU, Memoria RAM y Espacio
+                        en Disco. Como SSH solo devuelve texto, ejecutamos comandos complejos en el servidor remoto que
+                        nos devuelven la información ya procesada o limpia, lista para pintar las gráficas.</p>
+
+                    <p><strong>Código de Implementación (server/stats_endpoint.js):</strong></p>
+
+                    <h4>1. Uso de CPU</h4>
+                    <p>En Windows usamos WMI (Windows Management Instrumentation) y en Linux analizamos la salida del
+                        comando <code>top</code>.</p>
+                    <pre><code><span class="kd">const</span> <span class="v">cpuCmd</span> = <span class="v">isWindows</span>
+    <span class="c">// Windows: Obtenemos el porcentaje de carga promedio del procesador</span>
+    ? <span class="s">'powershell "Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average | Select-Object -ExpandProperty Average"'</span>
+    
+    <span class="c">// Linux:</span>
+    <span class="c">// 1. 'top -bn1': Muestra estado actual</span>
+    <span class="c">// 2. 'grep': Filtra la línea de CPU</span>
+    <span class="c">// 3. 'awk': Calcula el uso restando el tiempo inactivo (idle) al 100%</span>
+    : <span class="s">`top -bn1 | grep "Cpu(s)" | sed "s/.*, *\\([0-9.]*\\)%* id.*/\\1/" | awk '{print 100 - $1}'`</span>;</code></pre>
+
+                    <h4>2. Uso de Memoria RAM</h4>
+                    <p>En Windows consultamos el objeto del sistema operativo y en Linux usamos <code>free</code>.</p>
+                    <pre><code><span class="kd">const</span> <span class="v">memCmd</span> = <span class="v">isWindows</span>
+    <span class="c">// Windows: Calculamos GB Usados y Totales matemáticamente y lo convertimos a JSON</span>
+    ? <span class="s">'powershell "Get-CimInstance Win32_OperatingSystem | Select-Object @{Name=\\"UsedGB\\";Expression={[math]::Round(($_.TotalVisibleMemorySize - $_.FreePhysicalMemory)/1MB,2)}}, @{Name=\\"TotalGB\\";Expression={[math]::Round($_.TotalVisibleMemorySize/1MB,2)}} | ConvertTo-Json"'</span>
+    
+    <span class="c">// Linux: 'free -m' nos da megas. Awk formatea un JSON manual {"used":X, "total":Y}</span>
+    : <span class="s">`free -m | awk 'NR==2{printf "{\\"used\\":%s,\\"total\\":%s}", $3,$2}'`</span>;</code></pre>
+
+                    <h4>3. Uso de Disco</h4>
+                    <p>Medimos la unidad principal (<code>C:</code> en Windows, <code>/</code> root en Linux).</p>
+                    <pre><code><span class="kd">const</span> <span class="v">diskCmd</span> = <span class="v">isWindows</span>
+    <span class="c">// Windows: Obtenemos datos de la unidad C</span>
+    ? <span class="s">'powershell "Get-PSDrive C | Select-Object @{Name=\\"UsedGB\\";Expression={[math]::Round($_.Used/1GB,2)}}, @{Name=\\"TotalGB\\";Expression={[math]::Round(($_.Used+$_.Free)/1GB,2)}} | ConvertTo-Json"'</span>
+    
+    <span class="c">// Linux: 'df -BG' muestra uso en Gigabytes de la raíz '/'</span>
+    : <span class="s">`df -BG / | awk 'NR==2{gsub("G","",$3); gsub("G","",$2); printf "{\\"used\\":%s,\\"total\\":%s}", $3,$2}'`</span>;</code></pre>
+
+                    <img src="img/panel-3.png" alt="Gráficas de CPU, RAM y Disco" class="doc-image">
+                </div>
+            </section>
+
+            <section class="doc-card">
+                <span class="doc-title">D. Gestión de Servicios (Apache y MySQL)</span>
+                <div class="doc-content">
+                    <p><strong>¿En qué consiste?</strong><br>
+                        El panel permite ver si un servicio web o de base de datos está caído y levantarlo. El reto aquí
+                        es que el nombre del servicio cambia según el sistema operativo (ej. "Apache" en la UI puede ser
+                        "httpd", "apache2" o "Apache2.4").</p>
+
+                    <p><strong>Código de Implementación (server/service_endpoints.js):</strong></p>
+
+                    <h4>1. Normalización de Nombres</h4>
+                    <p>Primero traducimos el nombre genérico al nombre real del sistema.</p>
+                    <pre><code><span class="kd">const</span> <span class="f">getSystemServiceName</span> = (<span class="v">name</span>) => {
+    <span class="kd">const</span> <span class="v">lower</span> = <span class="v">name</span>.<span class="f">toLowerCase</span>();
+    <span class="kd">if</span> (<span class="v">isWindows</span>) {
+        <span class="kd">if</span> (<span class="v">lower</span>.<span class="f">includes</span>(<span class="s">'apache'</span>)) <span class="kd">return</span> <span class="s">'Apache2.4'</span>; <span class="c">// Nombre por defecto en XAMPP</span>
+        <span class="kd">if</span> (<span class="v">lower</span>.<span class="f">includes</span>(<span class="s">'mysql'</span>)) <span class="kd">return</span> <span class="s">'MySQL80'</span>;   <span class="c">// Nombre común en MySQL 8</span>
+        <span class="kd">return</span> <span class="v">name</span>;
+    } <span class="kd">else</span> {
+        <span class="kd">if</span> (<span class="v">lower</span>.<span class="f">includes</span>(<span class="s">'apache'</span>)) <span class="kd">return</span> <span class="s">'apache2'</span>;   <span class="c">// Nombre en Ubuntu/Debian</span>
+        <span class="kd">if</span> (<span class="v">lower</span>.<span class="f">includes</span>(<span class="s">'mysql'</span>)) <span class="kd">return</span> <span class="s">'mysql'</span>;
+        <span class="kd">return</span> <span class="v">name</span>.<span class="f">toLowerCase</span>();
+    }
+};</code></pre>
+
+                    <h4>2. Comprobar Estado (Status)</h4>
+                    <p>Verificamos si el servicio está activo.</p>
+                    <pre><code><span class="kd">if</span> (<span class="v">isWindows</span>) {
+    <span class="c">// PowerShell: Devuelve 'Running' o 'Stopped'</span>
+    <span class="v">cmd</span> = <span class="s">`powershell "Get-Service -Name '${systemService}' | Select-Object -ExpandProperty Status"`</span>;
+} <span class="kd">else</span> {
+    <span class="c">// Linux: systemd devuelve 'active' o 'inactive'</span>
+    <span class="v">cmd</span> = <span class="s">`systemctl is-active ${systemService}`</span>;
+}</code></pre>
+
+                    <h4>3. Reiniciar Servicio (Restart)</h4>
+                    <p>Forzamos un reinicio del servicio si se ha detenido o bloqueado.</p>
+                    <pre><code><span class="kd">if</span> (<span class="v">isWindows</span>) {
+    <span class="v">cmd</span> = <span class="s">`powershell "Restart-Service -Name '${systemService}' -Force"`</span>;
+} <span class="kd">else</span> {
+    <span class="c">// Linux: Igual que con el apagado, usamos 'sudo' inyectando la contraseña</span>
+    <span class="v">cmd</span> = <span class="s">`echo '${password}' | sudo -S -p '' systemctl restart ${systemService}`</span>;
+}</code></pre>
+
+                    <img src="img/panel-4.png" alt="Panel de Estado de Servicios" class="doc-image">
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
