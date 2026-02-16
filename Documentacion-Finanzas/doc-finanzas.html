@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación de Desarrollo - App Finanzas Personales PWA</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --bg-dark: #09090b;
+            --bg-card: #18181b;
+            --text-main: #e4e4e7;
+            --text-muted: #a1a1aa;
+            --border: #27272a;
+            --user-msg-bg: #2563eb;
+            --agent-msg-bg: #27272a;
+            --code-bg: #111113;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Header Action Buttons */
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: 1px solid var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--bg-card);
+            border-color: var(--text-muted);
+            transform: translateY(-1px);
+        }
+
+        /* Section Styles */
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        /* Stack Grid */
+        .stack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            /* Aumentado min-width para el texto */
+            gap: 1.5rem;
+        }
+
+        .stack-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .stack-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .stack-title {
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .stack-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Challenges Section */
+        .challenge-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .challenge-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: #f87171;
+            /* Rojo suave para indicar problema */
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .solution-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 1.5rem 0 1rem 0;
+            color: #4ade80;
+            /* Verde para indicar solución */
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #a5b4fc;
+        }
+
+        /* Screenshots Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .gallery-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            border-color: var(--primary);
+        }
+
+        .gallery-placeholder,
+        .gallery-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-placeholder {
+            background-color: #27272a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+            border: 2px dashed #52525b;
+            margin: 0;
+            /* Removed margin to fit container */
+            width: 100%;
+            /* Full width */
+            border-radius: 0;
+            /* Reset radius inside card */
+        }
+
+        .gallery-item:hover .gallery-placeholder {
+            background-color: #2e2e31;
+            color: var(--text-main);
+        }
+
+        .gallery-caption {
+            padding: 1rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* --- LIGHTBOX (MODAL) STYLES --- */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 1200px;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            animation-name: zoom;
+            animation-duration: 0.3s;
+        }
+
+        /* Styling for placeholder content in modal */
+        .modal-placeholder-content {
+            margin: auto;
+            width: 80%;
+            max-width: 800px;
+            height: 60vh;
+            background: #18181b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            border: 2px dashed var(--primary);
+            border-radius: 12px;
+            font-size: 1.5rem;
+            text-align: center;
+            animation-name: zoom;
+            animation-duration: 0.3s;
+        }
+
+        @keyframes zoom {
+            from {
+                transform: scale(0)
+            }
+
+            to {
+                transform: scale(1)
+            }
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+            font-size: 1.1rem;
+        }
+
+        /* Chat Logs Styles */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 1.25rem;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background-color: var(--user-msg-bg);
+            border-bottom-right-radius: 2px;
+        }
+
+        .message.agent {
+            align-self: flex-start;
+            background-color: var(--agent-msg-bg);
+            border-bottom-left-radius: 2px;
+        }
+
+        .message-header {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: bold;
+        }
+
+        .message-content {
+            white-space: pre-wrap;
+        }
+
+        /* Collapsible Sections for Chats */
+        details {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        summary {
+            padding: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            background-color: rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        summary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .details-content {
+            padding: 1.5rem;
+            background-color: #000000;
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        /* Media Query for Mobile Modal */
+        @media only screen and (max-width: 700px) {
+            .modal-content {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>FinanzApp IA (PWA)</h1>
+            <p class="subtitle">Documentación técnica y registro de desarrollo colaborativo con IA</p>
+
+            <div class="header-actions">
+                <a href="https://app-finanzas-woad.vercel.app/" target="_blank" class="btn btn-primary">
+                    🌐 Visitar Web App
+                </a>
+                <a href="https://drive.google.com/file/d/1hqsWZ0VTJHU5ufwk8h91dzeMy17cBBlR/view?usp=sharing"
+                    target="_blank" class="btn btn-outline">
+                    📱 Descargar APK (Android)
+                </a>
+                <a href="https://github.com/MarioDJB030/AppFinanzas" target="_blank" class="btn btn-outline">
+                    💻 Ver Código (GitHub)
+                </a>
+            </div>
+        </header>
+
+        <!-- INTRODUCCIÓN -->
+        <section id="intro">
+            <h2>Visión General</h2>
+            <p>
+                Este proyecto consiste en el desarrollo de una Aplicación Web Progresiva (PWA) de Finanzas Personales
+                completa.
+                La aplicación permite a los usuarios gestionar sus ingresos y gastos, visualizar estadísticas en tiempo
+                real,
+                gestionar inversiones con datos simulados/reales, establecer presupuestos y metas de ahorro, y escanear
+                tickets
+                utilizando Inteligencia Artificial.
+            </p>
+            <p>
+                Todo el código ha sido generado a través de un proceso iterativo de "Prompt Engineering" con un agente
+                de IA,
+                actuando como Arquitecto de Software Senior.
+            </p>
+        </section>
+
+        <!-- TECNOLOGÍAS -->
+        <section id="stack">
+            <h2>Stack Tecnológico</h2>
+            <div class="stack-grid">
+                <div class="stack-card">
+                    <div class="stack-title">Next.js 14 (App Router)</div>
+                    <div class="stack-desc">Framework principal usado por su enrutamiento moderno, Server Actions y
+                        optimización para SEO y PWA.</div>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-title">TypeScript</div>
+                    <div class="stack-desc">Garantiza un código robusto y tipado estático, reduciendo errores en tiempo
+                        de ejecución.</div>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-title">Supabase</div>
+                    <div class="stack-desc">Backend integral que provee la Base de Datos PostgreSQL, Autenticación
+                        segura y Almacenamiento de archivos.</div>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-title">Tailwind CSS</div>
+                    <div class="stack-desc">Framework de estilos "utility-first" que permite un diseño rápido,
+                        consistente y responsivo.</div>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-title">Shadcn/UI</div>
+                    <div class="stack-desc">Biblioteca de componentes reutilizables y accesibles (basada en Radix UI)
+                        para una interfaz profesional.</div>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-title">Gemini AI API</div>
+                    <div class="stack-desc">Motor de Inteligencia Artificial de Google para el asesoramiento financiero
+                        personalizado y el procesamiento de imágenes (tickets).</div>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-title">Alpha Vantage API</div>
+                    <div class="stack-desc">Proveedor de datos financieros externos para obtener cotizaciones de
+                        acciones y criptomonedas.</div>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-title">Recharts</div>
+                    <div class="stack-desc">Librería de gráficos basada en React para visualizar tendencias de gastos y
+                        distribución de categorías.</div>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-title">Vercel</div>
+                    <div class="stack-desc">Plataforma de despliegue continuo optimizada para Next.js, asegurando alto
+                        rendimiento global.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DESAFÍOS TÉCNICOS Y SOLUCIONES (NUEVO) -->
+        <section id="challenges">
+            <h2>Desafíos Técnicos y Soluciones</h2>
+            <p>Durante el desarrollo surgieron problemas complejos relacionados con límites de API y compatibilidad de
+                modelos de IA. A continuación se detallan las soluciones implementadas.</p>
+
+            <!-- RETO 1: GEMINI API -->
+            <div class="challenge-block">
+                <div class="challenge-title">
+                    ⚠️ Reto 1: Incompatibilidad de Modelos Gemini
+                </div>
+                <p>
+                    Al intentar usar el modelo estándar <code>gemini-1.5-flash</code> para el asesor financiero, la API
+                    devolvía un error <strong>404 Not Found</strong>. Esto impedía tanto el análisis de gastos como el
+                    escaneo de recibos.
+                </p>
+
+                <div class="solution-title">
+                    ✅ Solución: Depuración de Modelos Disponibles
+                </div>
+                <p>
+                    Se implementó un script de depuración temporal para consultar directamente a la API REST de Google y
+                    listar los modelos habilitados para la API Key actual. Se descubrió que el entorno requería una
+                    versión específica "preview".
+                </p>
+                <div class="code-block">
+                    <pre>import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
+
+// ...
+
+// Call Gemini API
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+const result = await model.generateContent(prompt);
+const response = await result.response;
+const text = response.text();</pre>
+                </div>
+            </div>
+
+            <!-- RETO 2: API INVERSIONES -->
+            <div class="challenge-block">
+                <div class="challenge-title">
+                    ⚠️ Reto 2: Rate Limits en API de Inversiones
+                </div>
+                <p>
+                    La API gratuita (Alpha Vantage) tiene un límite estricto de <strong>25 llamadas al día</strong> y 5
+                    por minuto. La implementación inicial intentaba actualizar todo el portafolio al cargar la página,
+                    rompiendo la aplicación y devolviendo errores 429 (Too Many Requests).
+                </p>
+
+                <div class="solution-title">
+                    ✅ Solución: Estrategia de Caché + Actualización Secuencial
+                </div>
+                <p>
+                    Se refactorizó el sistema para no depender de la API en tiempo real. Se añadieron campos
+                    <code>current_price</code> y <code>last_updated</code> a la base de datos (Supabase). La
+                    actualización ahora es manual y secuencial con retardos artificiales.
+                </p>
+                <div class="code-block">
+                    <pre>for (let i = 0; i < total; i++) {
+    const inv = initialInvestments[i];
+    
+    // ... (Lógica de obtención de precio y actualización en DB) ...
+
+    // Delay between requests to respect API limits (12s for safe side with 5 calls/min limit)
+    if (i < total - 1) {
+        await new Promise(resolve => setTimeout(resolve, 12000));
+    }
+}</pre>
+                </div>
+            </div>
+
+            <!-- RETO 3: STORAGE PRIVADO + IA -->
+            <div class="challenge-block">
+                <div class="challenge-title">
+                    ⚠️ Reto 3: Acceso de IA a Archivos Privados
+                </div>
+                <p>
+                    El bucket de Supabase <code>receipts</code> es privado por seguridad. Al enviar la URL de la imagen
+                    a Gemini, la IA fallaba con "Bad Request" porque no tenía permiso para descargar el archivo.
+                </p>
+
+                <div class="solution-title">
+                    ✅ Solución: Procesamiento Server-Side con Buffers
+                </div>
+                <p>
+                    En lugar de pasar la URL, el servidor (Next.js Server Action) descarga el archivo internamente
+                    usando el SDK de administración, lo convierte a Base64 y se lo pasa a la IA directamente en el
+                    cuerpo de la petición.
+                </p>
+                <div class="code-block">
+                    <pre>// 2. Download using the clean path
+const { data, error } = await supabase.storage
+    .from("receipts")
+    .download(filePath);
+
+if (error || !data) {
+    throw new Error(`Error al descargar de Storage: ${error?.message}`);
+}
+
+// 2. Convert Blob to Buffer to Base64
+const buffer = Buffer.from(await data.arrayBuffer());
+const base64 = buffer.toString("base64");
+const mimeType = data.type || "image/jpeg";
+
+// 3. Prepare Gemini Request
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+// ... (Definición del prompt) ...
+
+const imagePart = {
+    inlineData: {
+        data: base64,
+        mimeType: mimeType,
+    },
+};
+
+// 4. Generate Content
+const result = await model.generateContent([prompt, imagePart]);</pre>
+                </div>
+            </div>
+
+            <!-- RETO 4: SEGURIDAD API KEYS -->
+            <div class="challenge-block">
+                <div class="challenge-title">
+                    ⚠️ Reto 4: Seguridad y Gestión de API Keys
+                </div>
+                <p>
+                    El proyecto utiliza múltiples servicios externos (Google Gemini, Supabase, Alpha Vantage) que
+                    requieren credenciales sensibles. Exponer estas claves en el código fuente (hardcoding) o en el
+                    repositorio público representaría un grave riesgo de seguridad.
+                </p>
+
+                <div class="solution-title">
+                    ✅ Solución: Variables de Entorno en Vercel
+                </div>
+                <p>
+                    Se implementó una arquitectura segura utilizando variables de entorno. En desarrollo local se usa un
+                    archivo <code>.env.local</code> (excluido por .gitignore), y en producción, las claves se inyectan
+                    directamente desde el panel de configuración de <strong>Vercel</strong>.
+                </p>
+                <div class="code-block">
+                    <pre>// Acceso seguro en el servidor (Server Actions / API Routes)
+const apiKey = process.env.GOOGLE_API_KEY;
+
+// Acceso en el cliente (solo para variables públicas prefixadas)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+if (!apiKey) {
+    throw new Error("API Key no configurada en Vercel");
+}</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALERÍA VISUAL (PLACEHOLDERS) -->
+        <section id="gallery">
+            <h2>Interfaz Final</h2>
+            <p style="margin-bottom: 2rem; color: var(--text-muted);">
+                Capturas de pantalla de la versión final.
+                <span style="color: var(--primary);">Haz clic en cualquier imagen para verla en pantalla
+                    completa.</span>
+            </p>
+
+            <div class="gallery-grid">
+                <!-- Dashboard -->
+                <div class="gallery-item">
+                    <!-- Cuando tengas la imagen real, sustituye el DIV por: 
+                         <img src="ruta/a/tu/imagen.png" alt="Dashboard" class="gallery-img"> -->
+                    <img src="img/DashboardPrincipal.png" alt="Dashboard Principal" class="gallery-img">
+                    <div class="gallery-caption">Dashboard General con KPIs y Gráficos</div>
+                </div>
+
+                <!-- Transacciones -->
+                <div class="gallery-item">
+                    <img src="img/Transacciones.png" alt="Gestión de Transacciones" class="gallery-img">
+                    <div class="gallery-caption">Gestión de Transacciones y Filtros</div>
+                </div>
+
+                <!-- Calendario -->
+                <div class="gallery-item">
+                    <img src="img/Calendario.png" alt="Calendario de Pagos" class="gallery-img">
+                    <div class="gallery-caption">Calendario de Pagos Recurrentes</div>
+                </div>
+
+                <!-- Inversiones -->
+                <div class="gallery-item">
+                    <img src="img/Inversiones.png" alt="Portafolio de Inversiones" class="gallery-img">
+                    <div class="gallery-caption">Portafolio de Inversiones (Stocks/Cripto)</div>
+                </div>
+
+                <!-- Presupuestos -->
+                <div class="gallery-item">
+                    <img src="img/Presupuestos.png" alt="Control de Presupuestos" class="gallery-img">
+                    <div class="gallery-caption">Seguimiento de Presupuestos Mensuales</div>
+                </div>
+
+                <!-- AI Coach & Recibos -->
+                <div class="gallery-item">
+                    <img src="img/Tickets.png" alt="Asesor Financiero IA" class="gallery-img">
+                    <div class="gallery-caption">Escáner de Tickets y Asesor Financiero IA</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LOGS DE DESARROLLO (CHATS) -->
+        <section id="development-logs">
+            <h2>Registro de Desarrollo</h2>
+            <p>A continuación se detalla la conversación técnica mantenida con el Agente de IA para construir la
+                aplicación paso a paso.</p>
+
+            <!-- FASE 1 -->
+            <details open>
+                <summary>Fase 1: Configuración Inicial, Arquitectura y Dashboard</summary>
+                <div class="details-content chat-container">
+
+                    <div class="message user">
+                        <div class="message-header">Prompt Inicial</div>
+                        <div class="message-content">Actúa como un Arquitecto de Software Senior y Desarrollador Full
+                            Stack experto en React, Next.js y Supabase.
+
+                            Vamos a construir una Aplicación Web de Finanzas Personales (PWA).
+                            Tengo ya la base de datos creada en Supabase.
+                            Aquí tienes las credenciales de conexión:
+
+                            NEXT_PUBLIC_SUPABASE_URL: "[https://qeceylcpwvowsgiauviv.supabase.co]"
+                            NEXT_PUBLIC_SUPABASE_ANON_KEY: "[sb_publishable_PGOe1otGm3kimbIgYZETbg_1_ZYxmHG]"
+
+                            ---
+
+                            ### 1. CONTEXTO DE LA BASE DE DATOS (YA CREADA)
+                            No intentes crear tablas. Ya existen con este esquema:
+                            - profiles (id, email, currency)
+                            - accounts (id, name, type, initial_balance)
+                            - categories (id, name, type, icon)
+                            - transactions (id, account_id, category_id, amount, date, is_recurring)
+                            - recurring_rules (id, frequency, start_date, next_due_date, amount) -> Para el calendario
+                            - investments (id, symbol, quantity, avg_buy_price) -> Para la cartera
+
+                            ### 2. REQUERIMIENTOS FUNCIONALES
+                            Quiero que generes el código paso a paso para cubrir estas áreas:
+
+                            A. CONFIGURACIÓN Y AUTH
+                            - Inicializa un proyecto Next.js (App Router) con Tailwind CSS.
+                            - Configura el cliente de Supabase (`utils/supabase/client.ts`).
+                            - Crea una página de Login/Registro simple usando Supabase Auth.
+
+                            B. DASHBOARD (HOME)
+                            - Muestra el "Saldo Total" (suma de balances de cuentas + ingresos - gastos).
+                            - Gráfico de gastos por categoría (usa Recharts).
+                            - Lista de últimas transacciones.
+
+                            C. GESTIÓN DE TRANSACCIONES (MANUAL Y CSV)
+                            - Formulario para añadir Ingreso/Gasto manualmente.
+                            - **Importador CSV:** Crea un componente que permita subir un archivo .csv o .xlsx (usa la
+                            librería `xlsx` o `papaparse`). Debe permitir al usuario mapear columnas (Ej: "La columna A
+                            es Fecha", "La B es Cantidad") y luego hacer un "Bulk Insert" a la tabla `transactions`.
+
+                            D. CALENDARIO Y AUTOMATIZACIÓN
+                            - Crea una vista de Calendario (usa `react-calendar` o similar).
+                            - Muestra en el calendario los pagos pasados y los previstos (de la tabla
+                            `recurring_rules`).
+                            - **Lógica Crítica:** Implementa una función (`checkForRecurringPayments`) que se ejecute al
+                            cargar el Dashboard. Esta función debe mirar `recurring_rules`, ver si `next_due_date` es
+                            hoy o anterior, y si es así:
+                            1. Crear la transacción real en la tabla `transactions`.
+                            2. Actualizar la `next_due_date` a la siguiente fecha según la frecuencia.
+
+                            E. INVERSIONES (PORTAFOLIO)
+                            - Crea una vista "Inversiones".
+                            - Lista los activos de la tabla `investments`.
+                            - Crea un servicio (`utils/financeAPI.ts`) que consulte una API gratuita (usa 'Frankfurter'
+                            para divisas y simula 'Alpha Vantage' o usa una API pública simple para precios de acciones)
+                            para mostrar el valor actual del portafolio en tiempo real.
+
+                            ### 3. DISEÑO
+                            - Estilo: Moderno, Minimalista, Dark Mode por defecto.
+                            - Mobile First: Debe parecer una App nativa en el móvil.
+                            - Usa `lucide-react` para los iconos.
+
+                            Empieza por favor configurando el cliente de Supabase y la estructura de carpetas, y luego
+                            ve módulo por módulo.</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">El plan es perfecto. [El agente procede a inicializar el proyecto
+                            Next.js, instala dependencias como shadcn/ui, recharts, supabase-js, configura las variables
+                            de entorno y genera la estructura base de carpetas y autenticación].</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Preferencias UI)</div>
+                        <div class="message-content">El plan es perfecto. Solo una preferencia: para los componentes UI
+                            (Botones, Inputs, Cards, Dialogs), por favor intenta usar componentes estilo shadcn/ui
+                            (usando Radix UI y Tailwind) en lugar de crearlos desde cero, para asegurar accesibilidad y
+                            mejor diseño.</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">[El agente instala y configura componentes de shadcn/ui: button,
+                            card, input, dialog, etc. y configura el tema oscuro en globals.css].</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Acción del Agente</div>
+                        <div class="message-content">[Generación de código para: Dashboard, Pagos Recurrentes,
+                            Importador CSV, Calendario, Inversiones y Gestión de Cuentas].</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Fixes)</div>
+                        <div class="message-content">La interfaz ha quedado genial. Tengo 2 errores técnicos en la
+                            consola que necesito corregir:
+
+                            Error de Accesibilidad en Shadcn/UI: En el componente Sheet (o Dialog), me sale el error:
+                            DialogContent requires a DialogTitle. Por favor, añade un <SheetTitle> (o VisuallyHidden
+                                title) dentro del SheetContent para cumplir con la accesibilidad, aunque no se vea
+                                visualmente.
+
+                                Error en Recurring Payments: En utils/recurringPayments.ts, me sale un error en consola
+                                al iniciar: Error fetching recurring rules. Probablemente es porque la tabla está vacía.
+                                Por favor, modifica la función checkForRecurringPayments para que maneje el caso de una
+                                respuesta vacía o error de conexión de forma silenciosa (sin console.error si es solo
+                                que no hay datos), o devuelve un array vacío por defecto.</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">He corregido ambos errores:
+                            1. Añadido SheetTitle con clase sr-only para accesibilidad.
+                            2. Modificado el manejo de errores en recurringPayments.ts para ignorar respuestas vacías.
+                        </div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Fix SQL)</div>
+                        <div class="message-content">¡Ya tengo el error real! Estaba en la terminal. El error es de base
+                            de datos: column recurring_rules.is_active does not exist.
+
+                            El problema es que en el esquema de Supabase la columna se llama active, pero en tu código
+                            (en utils/recurringPayments.ts o donde hagas la consulta) la estás llamando is_active.
+
+                            Por favor, corrige la consulta .select() o el filtro .eq() para usar el nombre correcto de
+                            la columna: active.</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">Entendido. He corregido todas las referencias en el código de
+                            'is_active' a 'active' en los archivos de tipos y componentes.</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Fix Constraints)</div>
+                        <div class="message-content">Tienes razón, es un error de constraint. He revisado la base de
+                            datos y el check accounts_type_check solo permite estrictamente estos 4 valores (en
+                            minúsculas):
+
+                            bank
+
+                            cash
+
+                            savings
+
+                            investment
+
+                            Por favor, modifica el componente AccountForm.tsx (y cualquier definición de tipos en
+                            TypeScript) para que el dropdown/selector solo ofrezca estas opciones y envíe estos valores
+                            exactos a Supabase. No intentes enviar 'credit' ni 'checking'.</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">Listo. He actualizado AccountForm.tsx y los tipos de TypeScript
+                            para restringir las opciones estrictamente a esos 4 valores permitidos por la base de datos.
+                        </div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (UX)</div>
+                        <div class="message-content">En las transacciones pon otro filtro para poder filtrar por las
+                            cuentas que tenga el usuario y que solo se vean las transacciones de esa cuenta seleccionada
+                        </div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">He añadido un dropdown "Todas las cuentas" en la página de
+                            transacciones que permite filtrar el listado según la cuenta seleccionada.</div>
+                    </div>
+
+                </div>
+            </details>
+
+            <!-- FASE 2 -->
+            <details>
+                <summary>Fase 2: Refinamiento UI, Importación CSV y Lógica de Gráficos</summary>
+                <div class="details-content chat-container">
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Estilos Calendario)</div>
+                        <div class="message-content">Me he fijado en que en la pagina Calendario, el propio calendario
+                            parece no tener estilos, es asi? arreglalo</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">[El agente importa los estilos CSS necesarios de 'react-calendar' y
+                            aplica clases personalizadas de Tailwind para integrarlo con el tema oscuro].</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Lógica CSV)</div>
+                        <div class="message-content">(img 1)He probado a importar este csv, que es el que genera Imagin
+                            Bank. (img2) Y este ha sido el resultado, como no podia selecionar las columnas correctas,
+                            selecciones las que correspondian en la primera fila y luego al importase simplemente las
+                            que no se puedieran importar, no se importar (lo cual es correcto y esta genial) PERO las
+                            cantidades son incorrectas y todo son ingresos. Arreglalo.
+
+                            Por cierto con esto acabo de ver la necesidad de borrar transacciones, haz que puedas
+                            seleccionar transacciones dejandolas pulsadas y luego que te salga una opcion para borrarlas
+                        </div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">[Implementación de lógica para detectar signos negativos/positivos
+                            en el CSV y asignación automática de tipo Gasto/Ingreso. Implementación de Checkbox en la
+                            lista para borrado masivo].</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Filtros Ingreso/Gasto)</div>
+                        <div class="message-content">A la hora filtar por ingreso o gasto, ten en cuenta el valor, si es
+                            negativo o positivo, ya que al importar el csv y poner como categoria Otros Ingresos (ya que
+                            me obliga) al filtrar por ingresos aparecen como tal aunque no lo sean, por lo que arregla
+                            eso y cuando se importe un csv comprueba si es negativo o positivo y asignale la categoria
+                            predeterminada de "Otros Ingresos" u "Otros Gastos" segun cual sea</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">[Ajuste en la lógica de filtrado y asignación de categorías por
+                            defecto 'Otros Ingresos' u 'Otros Gastos' basándose en si el importe es positivo o
+                            negativo].</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Gráficos)</div>
+                        <div class="message-content">haz que al clicar en una categoria del grafico (como
+                            deseleccionarlo por asi decirlo) se quite del grafico</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">[Modificación del componente ExpensesChart.tsx usando la API de
+                            Recharts para manejar el estado de visibilidad de las series al hacer clic en la leyenda].
+                        </div>
+                    </div>
+
+                </div>
+            </details>
+
+            <!-- FASE 3 -->
+            <details>
+                <summary>Fase 3: Inversiones, Presupuestos, IA y PWA</summary>
+                <div class="details-content chat-container">
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Exportación)</div>
+                        <div class="message-content">En la pantalla de las Transacciones, al lado del boton de Importar
+                            CSV, pon un boton de exportar CSV con diferentes configuraciones</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Inversiones Refactor)</div>
+                        <div class="message-content">La implementación actual del módulo de Inversiones es demasiado
+                            compleja y falla por los límites de la API (solo tengo 25 llamadas al día, no 500). Además,
+                            da error al intentar guardar en la base de datos.
+
+                            Por favor, refactoriza completamente la página de Inversiones (/investments) con esta nueva
+                            lógica simplificada:
+
+                            1. Interfaz Amigable de "Añadir Activo":
+
+                            En lugar de pedir el símbolo manual (ticker), crea un Combobox/Select con búsqueda que tenga
+                            una lista predefinida en el código (hardcoded) con las 50 empresas y criptos más populares
+                            (ej: Apple -> AAPL, Bitcoin -> BTC, Tesla -> TSLA, S&P500 -> SPY).
+
+                            Permite también escribir un símbolo manual si no está en la lista.
+
+                            Selector de Tipo Obligatorio: Debe ser un dropdown con solo 3 opciones exactas para cumplir
+                            con la BBDD: 'Acción' (stock), 'Cripto' (crypto), 'ETF' (etf). Si envías otro texto fallará.
+
+                            2. Estrategia de "Caché" para Ahorrar API:
+
+                            NO consultes la API automáticamente cada vez que entro a la página.
+
+                            Muestra los activos basándote en los datos guardados en Supabase.
+
+                            Añade un botón manual "Actualizar Precios" en el Dashboard de inversiones.
+
+                            Cuando pulse ese botón, actualiza solo los precios uno a uno con un retraso de 2 segundos
+                            entre cada petición para no saturar la API.
+
+                            Si la API falla (límite alcanzado), muestra el último precio guardado y una alerta suave
+                            ("Límite diario alcanzado").
+
+                            3. Corrección de Base de Datos (Importante):
+
+                            Al guardar un nuevo activo, asegúrate de enviar el asset_type estrictamente como: "stock",
+                            "crypto" o "etf".
+
+                            Si la API de Alpha Vantage falla al intentar obtener el precio inicial al crear el activo,
+                            guárdalo igualmente con precio actual 0 o el precio de compra, para que no dé error al
+                            usuario.
+
+                            Objetivo: Que sea imposible que el usuario rompa la app por no saber un símbolo o por gastar
+                            las llamadas de la API.</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">[Refactorización completa del módulo Investments. Implementación de
+                            sistema de actualización secuencial con delay para respetar el Rate Limit de la API
+                            gratuita].</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Presupuestos)</div>
+                        <div class="message-content">La app está quedando genial. Ahora quiero implementar un sistema de
+                            Presupuestos Mensuales (Budgets).
+
+                            Actúa como Arquitecto de Software y realiza los siguientes cambios:
+
+                            1. Base de Datos (Supabase):
+
+                            Crea una tabla budgets con:
+
+                            id (uuid)
+
+                            user_id (fk users)
+
+                            category_id (fk categories)
+
+                            amount_limit (numeric) -> El límite de gasto mensual.
+
+                            period (text) -> Default 'monthly'.
+
+                            Aplica RLS (Row Level Security) igual que en las otras tablas.
+
+                            2. Lógica de Negocio:
+
+                            Necesito calcular el progreso en tiempo real.
+
+                            Suma todas las transacciones de tipo 'expense' del mes actual para esa categoría y compáralo
+                            con el amount_limit.
+
+                            3. Interfaz de Usuario:
+
+                            Crea una nueva página /budgets (o un módulo en el Dashboard).
+
+                            Muestra una lista de tarjetas. Cada tarjeta representa una categoría con presupuesto.
+
+                            Usa el componente Progress de shadcn/ui.
+
+                            Si el gasto < 80%: Barra Verde. Si el gasto> 80% y < 100%: Barra Amarilla. Si el gasto>=
+                                    100%: Barra Roja + Alerta visual.
+
+                                    Botón para 'Crear/Editar Presupuesto' donde elijo la categoría y el importe límite.
+
+                                    Por favor, empieza generando el SQL necesario para la tabla nueva.</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">[Creación de tabla, página de Presupuestos y tarjetas con lógica de
+                            colores semafóricos].</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Metas de Ahorro)</div>
+                        <div class="message-content">Vamos a crear el módulo de Metas de Ahorro (Savings Goals).
+
+                            Ya he creado la tabla goals en Supabase con los campos: id, name, target_amount,
+                            current_amount, deadline, icon.
+
+                            Por favor, implementa lo siguiente:
+
+                            1. Página de Metas (app/(protected)/goals/page.tsx):
+
+                            Muestra un grid con las metas activas.
+
+                            Usa un diseño de tarjeta (Card) diferente al de presupuestos para que se distinga.
+
+                            Muestra el progreso con una barra (Progress) y el porcentaje completado.
+
+                            Si hay deadline (fecha límite), calcula y muestra cuántos días faltan.
+
+                            2. Formulario de Creación (GoalForm):
+
+                            Permite crear una meta con: Nombre, Emoji (icono), Cantidad Objetivo y Fecha Límite
+                            (opcional).
+
+                            3. Funcionalidad de 'Aportar' (Importante):
+
+                            En cada tarjeta de meta, añade dos botones pequeños o un menú de acciones:
+
+                            Depositar (+): Abre un pequeño diálogo para sumar una cantidad al current_amount.
+
+                            Retirar (-): Para restar cantidad si he tenido que usar ese dinero.
+
+                            Al guardar, haz un update simple a la tabla goals sumando o restando el valor.
+
+                            4. Dashboard Widget:
+
+                            (Opcional por ahora) Crea un componente GoalsWidget simple para el dashboard que muestre
+                            solo la meta prioritaria (la que esté más cerca de completarse o la que tenga la fecha más
+                            próxima).
+
+                            Usa componentes de shadcn/ui y asegúrate de manejar los números correctamente.
+
+                            Un detalle extra de UX: Si al hacer un depósito el progreso llega al 100% (o más), por favor
+                            dispara una animación de confeti (puedes usar la librería canvas-confetti si es fácil de
+                            integrar, o simplemente una animación CSS sencilla) para celebrar el logro.</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">[Implementación de Metas, lógica de transacciones internas y efecto
+                            de confeti al completar].</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (IA Financial Coach)</div>
+                        <div class="message-content">Vamos a implementar la funcionalidad de IA Financial Coach usando
+                            la API gratuita de Google Gemini.
+
+                            He añadido la GOOGLE_API_KEY en el .env.local.
+
+                            1. Instalación:
+
+                            Instala el paquete: npm install @google/generative-ai
+
+                            2. Server Action (actions/getFinancialAdvice.ts):
+
+                            Crea una función de servidor que reciba los gastos del mes actual (array de transacciones) y
+                            los presupuestos.
+
+                            Importante (Privacidad): Antes de enviar los datos a la IA, simplifícalos. Solo envía: {
+                            category: string, amount: number }. No envíes nombres de transacciones ni IDs.
+
+                            Prompt para la IA:
+                            'Actúa como un asesor financiero experto pero amigable. Analiza estos gastos y presupuestos.
+                            Dame:
+
+                            Un breve resumen de mi salud financiera este mes.
+
+                            Tres consejos prácticos y específicos para ahorrar basados en estos datos.
+
+                            Un tono motivador.
+                            Responde en formato texto enriquecido (Markdown) pero sin usar encabezados grandes (#), usa
+                            negritas y listas.'
+
+                            Usa el modelo gemini-1.5-flash para generar el contenido.
+
+                            3. Componente UI (components/dashboard/AiAdvisor.tsx):
+
+                            Crea una tarjeta bonita con un borde brillante o un icono de 'cerebro/robot'.
+
+                            Estado inicial: Un botón que diga '🤖 Analizar mis finanzas con IA'.
+
+                            Estado de carga: Muestra un 'skeleton' o un spinner con el texto 'Analizando tus patrones de
+                            gasto...'.
+
+                            Estado final: Muestra la respuesta de la IA formateada (puedes usar react-markdown si es
+                            necesario, o simplemente saltos de línea y negritas).
+
+                            4. Integración:
+
+                            Coloca este componente en el Dashboard, quizás debajo de los gráficos, ocupando el ancho
+                            completo (col-span-full) para que tenga espacio para escribir.</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">[Integración de Google Generative AI SDK. Creación de Server Action
+                            para análisis financiero y componente UI para mostrar la respuesta en Markdown].</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Fix IA Model)</div>
+                        <div class="message-content">¡Misterio resuelto! He listado los modelos y resulta que mi API Key
+                            tiene acceso a las versiones más nuevas. El modelo gemini-1.5-flash no está en la lista,
+                            pero sí tengo gemini-2.5-flash.
+
+                            Por favor, finaliza la implementación en actions/getFinancialAdvice.ts:
+
+                            Restaura la lógica: Elimina el código de depuración (el fetch a la lista de modelos) y
+                            descomenta la lógica original de generateContent.
+
+                            Usa el modelo correcto: En genAI.getGenerativeModel, usa el modelo: "gemini-2.5-flash".
+
+                            Limpia logs: Elimina los console.log sobrantes para dejar el código limpio.
+
+                            Con esto ya debería funcionar el análisis financiero.</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">[Actualización del modelo en la llamada a la API].</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Gestor de Recibos IA)</div>
+                        <div class="message-content">Vamos a crear el módulo final: Gestor de Facturas y Tickets.
+
+                            Objetivo: Permitir al usuario subir imágenes (JPG, PNG) y PDFs de sus facturas y
+                            organizarlos en una galería.
+
+                            1. Almacenamiento:
+
+                            Usa el bucket receipts que ya he creado en Supabase Storage.
+
+                            Los archivos deben guardarse con una ruta única: user_id/timestamp_nombre.ext.
+
+                            2. Nueva Página (app/(protected)/receipts/page.tsx):
+
+                            Implementa una zona de subida (Dropzone) usando la API nativa de archivos o una librería
+                            ligera.
+
+                            Permite seleccionar una transacción existente (opcional) para enlazar el ticket al gasto.
+
+                            3. Galería de Documentos (ReceiptGallery.tsx):
+
+                            Muestra los documentos en un grid de tarjetas.
+
+                            Vista Previa Inteligente: > * Si es imagen, muestra una miniatura.
+
+                            Si es PDF, muestra un icono grande de PDF (Lucide FileText).
+
+                            Al hacer clic, abre un Modal/Dialog para ver la imagen a tamaño completo o un botón de
+                            'Descargar' si es PDF.
+
+                            4. Integración en Transacciones:
+
+                            Modifica la lista de transacciones para que, si una transacción tiene un ticket asociado,
+                            aparezca un pequeño icono de 'clip' 📎 que abra el ticket directamente.
+
+                            5. UI:
+
+                            Usa shadcn/ui para los diálogos y botones. Mantén el estilo oscuro y elegante.
+
+                            Adelante con la implementación del sistema de archivos.
+
+                            Vamos a coronar la aplicación con la funcionalidad de Escaneo Inteligente de Tickets usando
+                            models/gemini-2.5-flash...</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">[Implementación de subida de archivos, Server Action multimodal
+                            (Imagen -> Base64 -> Gemini) y formulario de confirmación de datos extraídos].</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (PWA)</div>
+                        <div class="message-content">La aplicación está terminada. Ahora quiero convertirla en una
+                            Progressive Web App (PWA) para poder instalarla en iOS y Android.
+
+                            1. Instalación:
+
+                            Instala el paquete: npm install @ducanh2912/next-pwa
+
+                            2. Configuración (next.config.mjs):
+
+                            Envuelve la configuración existente con el plugin withPWA.
+
+                            Configuración del plugin:
+
+                            dest: 'public'
+
+                            register: true
+
+                            skipWaiting: true
+
+                            disable: process.env.NODE_ENV === 'development' (Para que no moleste mientras programamos).
+
+                            3. Manifiesto (public/manifest.json):
+
+                            Crea este archivo con los metadatos de la app:
+
+                            name: 'FinanzApp IA'
+
+                            short_name: 'Finanzas'
+
+                            description: 'Gestor financiero inteligente con IA'
+
+                            start_url: '/'
+
+                            display: 'standalone' (Esto quita la barra del navegador)
+
+                            background_color: '#09090b' (Color de fondo oscuro de nuestra app)
+
+                            theme_color: '#09090b'
+
+                            icons: Define array para 'icon-192.png' y 'icon-512.png'.
+
+                            4. Viewport (app/layout.tsx):
+
+                            Asegúrate de exportar el objeto viewport correctamente configurado para móviles:
+
+                            themeColor: '#09090b'
+
+                            width: 'device-width'
+
+                            initialScale: 1
+
+                            maximumScale: 1 (Para evitar zoom accidental al hacer inputs).
+
+                            Implementa estos cambios para activar el modo PWA.</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">[Configuración final de next.config.mjs y generación de assets para
+                            PWA. Solución de conflictos entre Turbopack y Webpack].</div>
+                    </div>
+
+                    <div class="message user">
+                        <div class="message-header">Prompt (Deploy Fixes)</div>
+                        <div class="message-content">Estoy cansado de subir cambios a Vercel y que fallen. Vamos a
+                            arreglar esto en local.
+
+                            Por favor, ejecuta el comando: npm run build en la terminal.
+
+                            Tu misión es la siguiente:
+
+                            Ejecuta el build.
+
+                            Si falla (aparece texto rojo), analiza el error y soluciona el código tú mismo
+                            inmediatamente.
+
+                            Vuelve a ejecutar npm run build para verificar tu arreglo.
+
+                            Repite este bucle (Build -> Error -> Fix -> Build) hasta que el comando termine exitosamente
+                            con un mensaje de 'Compiled successfully'.
+
+                            Solo avísame cuando el build esté completamente verde y limpio. ¡Adelante!</div>
+                    </div>
+
+                    <div class="message agent">
+                        <div class="message-header">Respuesta del Agente</div>
+                        <div class="message-content">[Ciclo de depuración: Corrección de tipos estrictos en TypeScript,
+                            ajustes en Recharts (width/height), y validación final de build exitoso].</div>
+                    </div>
+
+                </div>
+            </details>
+        </section>
+
+        <footer>
+            <p>Proyecto desarrollado para evaluación académica | 2026</p>
+        </footer>
+    </div>
+
+    <!-- The Modal/Lightbox -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <!-- Image content -->
+        <img class="modal-content" id="img01" style="display:none;">
+        <!-- Placeholder content (for demo) -->
+        <div id="modalPlaceholder" class="modal-placeholder-content" style="display:none;"></div>
+        <!-- Caption -->
+        <div id="caption"></div>
+    </div>
+
+    <!-- Script for Lightbox -->
+    <script>
+        // Get the modal
+        var modal = document.getElementById("imageModal");
+        var modalImg = document.getElementById("img01");
+        var modalPlaceholder = document.getElementById("modalPlaceholder");
+        var captionText = document.getElementById("caption");
+
+        // Get all gallery items (both placeholders and future images)
+        var items = document.querySelectorAll('.gallery-item');
+
+        items.forEach(function (item) {
+            item.addEventListener('click', function () {
+                modal.style.display = "block";
+
+                // Check if the item contains an image or a placeholder div
+                var img = this.querySelector('img');
+                var placeholder = this.querySelector('.gallery-placeholder');
+                var caption = this.querySelector('.gallery-caption').innerText;
+
+                if (img) {
+                    // It's a real image
+                    modalImg.style.display = "block";
+                    modalPlaceholder.style.display = "none";
+                    modalImg.src = img.src;
+                    captionText.innerHTML = caption;
+                } else if (placeholder) {
+                    // It's a placeholder (demo mode)
+                    modalImg.style.display = "none";
+                    modalPlaceholder.style.display = "flex";
+                    modalPlaceholder.innerText = placeholder.innerText;
+                    modalPlaceholder.style.borderColor = "#2563eb"; // Use primary color
+                    captionText.innerHTML = caption;
+                }
+            });
+        });
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // Close when clicking outside the image
+        modal.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === "Escape") {
+                modal.style.display = "none";
+            }
+        });
+    </script>
+</body>
+
+</html>
